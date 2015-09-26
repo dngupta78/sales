@@ -24,15 +24,50 @@ frappe.ui.form.on("Flat Invoice","rate",function(frm)
 {
  frm.set_value("basic_cost",frm.doc.rate * frm.doc.area);
 });
-//----------------------Other Charges Calculation----------------------------------
-
+frappe.ui.form.on("Flat Invoice","rate",function(frm)
+{
+ frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
+});
+//----------------------Other Charges Calculation------------
 cur_frm.cscript.charges= function() {
             var me = this;
-            msgprint("from js function")
+            //msgprint("from js Charges function")
             if(5==5) {
                 return this.frm.call({
                     doc: this.frm.doc,
                     method: "charges_method",
+                    callback: function(r) {
+                        if(!r.exc) {
+                        }
+                    }
+                })
+            }
+        }
+		
+cur_frm.cscript.discounts= function() {
+            var me = this;
+            //msgprint("from js Disccount function")
+            if(5==5) {
+                return this.frm.call({
+                    doc: this.frm.doc,
+                    method: "discounts_method",
+                    callback: function(r) {
+                        if(!r.exc) {
+                        }
+                    }
+                })
+            }
+        }
+		
+		
+		
+cur_frm.cscript.taxes= function() {
+            var me = this;
+            //msgprint("from js Taxes function")
+            if(5==5) {
+                return this.frm.call({
+                    doc: this.frm.doc,
+                    method: "taxes_method",
                     callback: function(r) {
                         if(!r.exc) {
                         }
