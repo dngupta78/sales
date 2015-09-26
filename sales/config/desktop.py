@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from frappe import _
 
 def get_data():
 	return {
 		"sales": {
-			"color": "grey",
-			"icon": "octicon octicon-file-directory",
+			"color": "blue",
+			"icon": "octicon octicon-zap",
 			"type": "module",
 			"label": _("sales")
 		}

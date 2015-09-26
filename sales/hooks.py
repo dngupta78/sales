@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 app_name = "sales"
 app_title = "sales"
-app_publisher = "d"
-app_description = "desc"
-app_icon = "octicon octicon-file-directory"
-app_color = "grey"
-app_email = "d"
+app_publisher = "deepak"
+app_description = "This app is for flat sales invoice"
+app_icon = "octicon octicon-zap"
+app_color = "blue"
+app_email = "dngupta78@gmail.com"
 app_version = "0.0.1"
 
 # Includes in <head>
@@ -55,11 +52,11 @@ app_version = "0.0.1"
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+# 	"Event": "frappe.core.doctype.event.event.get_permission_query_conditions",
 # }
 #
 # has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
+# 	"Event": "frappe.core.doctype.event.event.has_permission",
 # }
 
 # Document Events
@@ -104,6 +101,6 @@ app_version = "0.0.1"
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "sales.event.get_events"
+# 	"frappe.core.doctype.event.event.get_events": "sales.event.get_events"
 # }
 
