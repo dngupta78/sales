@@ -28,6 +28,10 @@ frappe.ui.form.on("Flat Invoice","rate",function(frm)
 {
  frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
 });
+frappe.ui.form.on("Flat Invoice","other_charges_total",function(frm)
+{
+ frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
+});
 //----------------------Other Charges Calculation------------
 cur_frm.cscript.charges= function() {
             var me = this;
@@ -38,6 +42,7 @@ cur_frm.cscript.charges= function() {
                     method: "charges_method",
                     callback: function(r) {
                         if(!r.exc) {
+							//frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
                         }
                     }
                 })

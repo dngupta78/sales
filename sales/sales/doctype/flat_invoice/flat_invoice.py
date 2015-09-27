@@ -23,7 +23,7 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.charges)
 		doc_req = []
-		if self.charges:
+		if self.flag1==0:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
 			#frappe.msgprint("From Python charges_method")
 			val=0
@@ -34,32 +34,43 @@ class FlatInvoice(Document):
 					"charge_type":value.charge_type,
 					"description": value.description,
 					"rate": value.rate,
-					"tax_amount":value.tax_amount,
+					"tax_amount":value.rate,
 					}
+				
 				self.other_charges_total=val
+				#frappe.msgprint(self.other_charges_total)
 				self.append("charges_table", doc_req)
+			self.total_a=self.total_a+self.other_charges_total
+			self.flag1=1
 				
 
 	def discounts_method(self):
 		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.discounts)
 		doc_req = []
-		if self.discounts:
+		val1=0
+		if self.flag2==0:
+			self.flag2=1
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.discounts)
 			#frappe.msgprint("From Python discounts_method")
 			for value in doc_master.get("other_charges"):
 				#if "discount" or "Discount" in value.description:
 				#frappe.msgprint(value.description)
+				val1=val1+(self.total_a * (value.rate/100))
 				doc_req = {
 					"doctype": "Sales Taxes and Charges",
 					"charge_type":value.charge_type,
 					"description": value.description,
 					"rate": value.rate,
+					"tax_amount":self.total_a * (value.rate/100),
 					}
+					
 				self.append("discounts_table", doc_req)
-				
-				
+			self.discounts_total=val1
+			self.total_b=self.total_a-self.discounts_total			
 
+	
+	
 	def taxes_method(self):
 		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.charges)
