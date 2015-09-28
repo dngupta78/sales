@@ -794,6 +794,14 @@
    "set_only_once": 0
   }, 
   {
+   "default": "0", 
+   "fieldname": "flag3", 
+   "fieldtype": "Int", 
+   "label": "Taxes Flag", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "taxes_table", 
    "fieldtype": "Table", 
@@ -1190,7 +1198,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-09-27 11:31:25.216056", 
+ "modified": "2015-09-28 15:00:12.753669", 
  "modified_by": "Administrator", 
  "module": "sales", 
  "name": "Flat Invoice", 

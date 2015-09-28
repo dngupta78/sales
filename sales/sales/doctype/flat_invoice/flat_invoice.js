@@ -32,6 +32,16 @@ frappe.ui.form.on("Flat Invoice","other_charges_total",function(frm)
 {
  frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
 });
+//----------------------Rounded Total Calculation------------
+frappe.ui.form.on("Flat Invoice","round_off",function(frm)
+{
+ frm.set_value("rounded_total",frm.doc.total_b_c2 -  frm.doc.round_off);
+});
+//----------------------Balance Amount Calculation------------
+frappe.ui.form.on("Flat Invoice","down_payment",function(frm)
+{
+ frm.set_value("balance_amount",frm.doc.rounded_total -  frm.doc.down_payment);
+});
 //----------------------Other Charges Calculation------------
 cur_frm.cscript.charges= function() {
             var me = this;
