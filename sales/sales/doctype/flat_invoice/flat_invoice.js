@@ -90,3 +90,44 @@ cur_frm.cscript.taxes= function() {
                 })
             }
         }
+//-----------------
+/*var f = cur_frm.fields_dict['charges_table']
+var val=f.df.rate
+
+frappe.ui.form.on("Flat Invoice","charges",function(frm)
+{
+ alert(val);
+});
+//f.df.hidden = 1;
+//f.refresh();*/
+
+
+/*cur_frm.cscript.charges_table(doc, dt, dn) {
+      if(dt.first_name.length < 3) {
+         msgprint("First Name should atleast be 3 characters long.")
+      }
+}*/
+
+
+/*cur.frm.cscript.child_table_field_name=function(doc,cdt,cdn)
+{
+var d=locals[cdt][cdn]
+var cost_value=d.rate * d.units;
+d.cost=cost_value;
+refresh_field("child_table_name");
+}*/
+
+cur.frm.cscript.charges_table=function(doc,dt,dn)
+{
+var d=locals[dt][dn]
+var cost_value=d.rate + 1;
+d.amount=cost_value;
+refresh_field("charges_table");
+}
+
+
+
+
+
+
+
