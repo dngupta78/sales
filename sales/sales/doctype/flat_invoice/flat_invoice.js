@@ -18,13 +18,13 @@ frappe.ui.form.on("Flat Invoice","invoice_flat_no",function(frm)
 //----------------------Basic Cost Calculation----------------------------------
 frappe.ui.form.on("Flat Invoice","area",function(frm)
 {
- frm.set_value("basic_cost",frm.doc.rate * frm.doc.area);
+ frm.set_value("basic_cost",frm.doc.basic_rate * frm.doc.area);
 });
-frappe.ui.form.on("Flat Invoice","rate",function(frm)
+frappe.ui.form.on("Flat Invoice","basic_rate",function(frm)
 {
- frm.set_value("basic_cost",frm.doc.rate * frm.doc.area);
+ frm.set_value("basic_cost",frm.doc.basic_rate * frm.doc.area);
 });
-frappe.ui.form.on("Flat Invoice","rate",function(frm)
+frappe.ui.form.on("Flat Invoice","basic_rate",function(frm)
 {
  frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
 });
@@ -43,22 +43,23 @@ frappe.ui.form.on("Flat Invoice","down_payment",function(frm)
  frm.set_value("balance_amount",frm.doc.rounded_total -  frm.doc.down_payment);
 });
 //----------------------Other Charges Calculation------------
-cur_frm.cscript.charges= function() {
+cur_frm.cscript.charges= function(frm) {
             var me = this;
             //msgprint("from js Charges function")
-            if(5==5) {
+            if(this.frm.doc.charges_table ==null) {
                 return this.frm.call({
                     doc: this.frm.doc,
                     method: "charges_method",
                     callback: function(r) {
                         if(!r.exc) {
 							//frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
-                        }
+                        
+						}
                     }
                 })
             }
         }
-		
+
 cur_frm.cscript.discounts= function() {
             var me = this;
             //msgprint("from js Disccount function")
@@ -91,43 +92,35 @@ cur_frm.cscript.taxes= function() {
             }
         }
 //-----------------
-/*var f = cur_frm.fields_dict['charges_table']
-var val=f.df.rate
-
-frappe.ui.form.on("Flat Invoice","charges",function(frm)
-{
- alert(val);
-});
-//f.df.hidden = 1;
-//f.refresh();*/
-
-
-/*cur_frm.cscript.charges_table(doc, dt, dn) {
-      if(dt.first_name.length < 3) {
-         msgprint("First Name should atleast be 3 characters long.")
-      }
-}*/
-
-
-/*cur.frm.cscript.child_table_field_name=function(doc,cdt,cdn)
-{
-var d=locals[cdt][cdn]
-var cost_value=d.rate * d.units;
-d.cost=cost_value;
-refresh_field("child_table_name");
-}*/
-
-cur.frm.cscript.charges_table=function(doc,dt,dn)
-{
-var d=locals[dt][dn]
-var cost_value=d.rate + 1;
-d.amount=cost_value;
-refresh_field("charges_table");
-}
-
-
-
-
-
-
-
+/*cur_frm.cscript.charges_table = function(doc, cdt, cdn) {
+	 var me = this;
+            if(1) {
+                return this.frm.call({
+                    doc: this.frm.doc,
+                    method: "charges_table_method",
+                    callback: function(r) {
+                        if(!r.exc) {
+							//frm.set_value("total_a",frm.doc.basic_cost + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges + frm.doc.other_charges_total);
+                        
+						}
+                    }
+                })
+            }
+        };
+	*/
+	
+	
+	
+	
+	
+	
+cur_frm.cscript.rate = function(doc, cdt, cdn) {
+    var charge = frappe.get_doc(cdt, cdn);
+    var amount = (doc.basic_cost * charge.rate)/100  ;
+	frappe.model.set_value(cdt, cdn, "tax_amount", amount);
+	frappe.model.set_value("other_charges_total", doc.other_charges_total + amount)
+	//cur_frm.set_value('other_charges_total', doc.other_charges_total + amount);
+	//refresh_field('other_charges_total');
+	
+};
+	

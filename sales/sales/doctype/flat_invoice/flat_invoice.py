@@ -24,6 +24,7 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.charges)
 		doc_req = []
 		if self.flag1==0:
+		#if self.charges:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
 			#frappe.msgprint("From Python charges_method")
 			val=0
@@ -42,6 +43,19 @@ class FlatInvoice(Document):
 				self.append("charges_table", doc_req)
 			self.total_a=self.total_a+self.other_charges_total
 			self.flag1=1
+			
+			
+	'''def calculate_charges(self):
+		frappe.msgprint("From Python")
+		doc_req = []
+		#doc_master = frappe.get_doc("Sales Taxes and Charges")
+		val=0
+		frappe.doclist.getchildren(name, Sales Taxes and , field='tax_amount')
+		for value in doc_master:
+			val=val+value.tax_amount
+			frappe.msgprint(val)
+			self.other_charges_total=val
+		self.total_a=self.total_a+self.other_charges_total'''
 				
 
 	def discounts_method(self):
@@ -93,6 +107,11 @@ class FlatInvoice(Document):
 				self.append("taxes_table", doc_req)
 			self.total_c=val2
 			self.total_b_c2=self.total_b-self.total_c
+			
+			
+	def charges_table_method(self):
+		charge=frappe.get_doc(self.charges_table);
+		msgprint(charge.rate)
 			
 	
 	
