@@ -18,7 +18,7 @@
    "in_list_view": 0, 
    "label": "Charge Type", 
    "no_copy": 0, 
-   "options": "On Net Total\nActul", 
+   "options": "On Net Total\nActual", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
@@ -26,8 +26,7 @@
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }, 
   {
    "allow_on_submit": 0, 
@@ -46,8 +45,7 @@
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 1, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }, 
   {
    "allow_on_submit": 0, 
@@ -64,10 +62,9 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 1, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }, 
   {
    "allow_on_submit": 0, 
@@ -84,10 +81,9 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 1, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }, 
   {
    "allow_on_submit": 0, 
@@ -104,10 +100,9 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 1, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }, 
   {
    "allow_on_submit": 0, 
@@ -124,10 +119,9 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 1, 
-   "set_only_once": 0, 
-   "unique": 0
+   "set_only_once": 0
   }
  ], 
  "hide_heading": 0, 
@@ -137,7 +131,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2015-09-22 10:53:31.167308", 
+ "modified": "2015-10-01 15:18:08.530080", 
  "modified_by": "Administrator", 
  "module": "sales", 
  "name": "Payment Schedule", 

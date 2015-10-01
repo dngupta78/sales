@@ -4,6 +4,7 @@ cur_frm.add_fetch("invoice_flat_no","type","invoice_flat_type")
 cur_frm.add_fetch("invoice_flat_no","area","area")
 cur_frm.add_fetch("invoice_flat_no","plc_rate","plc_rate")
 cur_frm.add_fetch("invoice_flat_no","frc_rate","frc_rate")
+cur_frm.add_fetch("flat_invoice","customer_name","customer_name")
 //----------------------PLC&FRC Calculation----------------------------------
 frappe.ui.form.on("Flat Invoice","area",function(frm)
 {
@@ -42,11 +43,21 @@ frappe.ui.form.on("Flat Invoice","down_payment",function(frm)
 {
  frm.set_value("balance_amount",frm.doc.rounded_total -  frm.doc.down_payment);
 });
+//----------------------Total B Amount Calculation------------
+frappe.ui.form.on("Flat Invoice","total_a",function(frm)
+{
+ frm.set_value("total_b",frm.doc.total_a + frm.doc.discounts_total);
+});
+//----------------------Total C Amount Calculation------------
+frappe.ui.form.on("Flat Invoice","total_b",function(frm)
+{
+ frm.set_value("total_b_c2",frm.doc.total_b + frm.doc.total_c);
+});
 //----------------------Other Charges Calculation------------
-cur_frm.cscript.charges= function(frm) {
+cur_frm.cscript.charges= function(frm,this.frm.doc.charges_table) {
             var me = this;
             //msgprint("from js Charges function")
-            if(this.frm.doc.charges_table ==null) {
+            if(0==0) {
                 return this.frm.call({
                     doc: this.frm.doc,
                     method: "charges_method",
