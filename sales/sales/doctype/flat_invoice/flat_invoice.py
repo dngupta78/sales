@@ -26,21 +26,32 @@ class FlatInvoice(Document):
 		if self.flag1==0:
 		#if self.charges:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
-			#frappe.msgprint("From Python charges_method")
+			frappe.msgprint("From Python charges_method")
 			val=0
 			for value in doc_master.get("other_charges"):
-				val=val+value.rate
-				doc_req = {
-					"doctype": "Sales Taxes and Charges",
-					"charge_type":value.charge_type,
-					"description": value.description,
-					"rate": value.rate,
-					"tax_amount":value.rate,
-					}
-				
-				self.other_charges_total=val
-				#frappe.msgprint(self.other_charges_total)
-				self.append("charges_table", doc_req)
+				if value.charge_type=="Actual":
+					val=val+value.rate
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":value.rate,
+						}
+					self.append("charges_table", doc_req)
+				elif value.charge_type=="On Net Total":
+					val=val+(self.total_a * (value.rate/100))
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":self.total_a * (value.rate/100),
+						}
+					self.other_charges_total=val
+					#frappe.msgprint(self.other_charges_total)
+					self.append("charges_table", doc_req)
+			self.other_charges_total=val
 			self.total_a=self.total_a+self.other_charges_total
 			self.flag1=1
 			
@@ -70,16 +81,27 @@ class FlatInvoice(Document):
 			for value in doc_master.get("other_charges"):
 				#if "discount" or "Discount" in value.description:
 				#frappe.msgprint(value.description)
-				val1=val1+(self.total_a * (value.rate/100))
-				doc_req = {
-					"doctype": "Sales Taxes and Charges",
-					"charge_type":value.charge_type,
-					"description": value.description,
-					"rate": value.rate,
-					"tax_amount":self.total_a * (value.rate/100),
-					}
+				if value.charge_type=="Actual":
+					val1=val1+value.rate
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":value.rate,
+						}
+					self.append("discounts_table", doc_req)
+				elif value.charge_type=="On Net Total":
+					val1=val1+(self.total_a * (value.rate/100))
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":self.total_a * (value.rate/100),
+						}	
 					
-				self.append("discounts_table", doc_req)
+					self.append("discounts_table", doc_req)
 			self.discounts_total=val1
 			self.total_b=self.total_a-self.discounts_total			
 
