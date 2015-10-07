@@ -19,12 +19,23 @@ import flat_invoice
 
 
 class FlatInvoice(Document):
+
+	#charges_table=[]
+
+	#def __init__(self,charges_table):
+	#	self.charges_table=charges_table
+	
+
 	def charges_method(self):
 		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.charges)
 		doc_req = []
-		if self.flag1==0:
-		#if self.charges:
+		#a = self.doc.get("taxes_table")
+		#frappe.msgprint(a)
+		#if self.flag1==0:
+		#if not self.charges_table:
+		frappe.msgprint("From Python charges_method")
+		if self.charges:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
 			frappe.msgprint("From Python charges_method")
 			val=0
@@ -38,9 +49,9 @@ class FlatInvoice(Document):
 						"rate": value.rate,
 						"tax_amount":value.rate,
 						}
-					self.append("charges_table", doc_req)
+			        #frappe.model.clear_table("charges_table");
 				elif value.charge_type=="On Net Total":
-					val=val+(self.total_a * (value.rate/100))
+					val=val+(self.basic_cost * (value.rate/100))
 					doc_req = {
 						"doctype": "Sales Taxes and Charges",
 						"charge_type":value.charge_type,
@@ -50,7 +61,7 @@ class FlatInvoice(Document):
 						}
 					self.other_charges_total=val
 					#frappe.msgprint(self.other_charges_total)
-					self.append("charges_table", doc_req)
+				self.append("charges_table", doc_req)
 			self.other_charges_total=val
 			self.total_a=self.total_a+self.other_charges_total
 			self.flag1=1
@@ -141,9 +152,43 @@ class FlatInvoice(Document):
 			self.total_b_c2=self.total_b-self.total_c
 			
 			
-	def charges_table_method(self):
-		charge=frappe.get_doc(self.charges_table);
-		msgprint(charge.rate)
+	def charge_type_method(self):
+		doc_req = []
+		#frappe.msgprint("From Python charges_method")
+		#if self.charges_type:
+		if 0==0:
+			doc_master = frappe.get_doc("Sales Taxes and Charges")
+			#frappe.msgprint("From Python charges_method")
+			val=0
+			for value in doc_master.get("taxes_table"):
+				if value.charge_type=="Actual":
+					val=val+value.rate
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":value.rate,
+						"tax_amount":self.basic_cost + value.rate,
+						
+						}
+			        #frappe.model.clear_table("charges_table");
+					self.append("charges_table", doc_req)
+				elif value.charge_type=="On Net Total":
+					val=val+(self.total_a * (value.rate/100))
+					doc_req = {
+						"doctype": "Sales Taxes and Charges",
+						"charge_type":value.charge_type,
+						"description": value.description,
+						"rate": value.rate,
+						"tax_amount":self.total_a * (value.rate/100),
+						}
+					self.other_charges_total=val
+					#frappe.msgprint(self.other_charges_total)
+					self.append("charges_table", doc_req)
+			self.other_charges_total=val
+			self.total_a=self.total_a+self.other_charges_total
+			self.flag1=1
 			
 	
 	

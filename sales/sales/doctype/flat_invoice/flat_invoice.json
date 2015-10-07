@@ -319,24 +319,6 @@
   }, 
   {
    "allow_on_submit": 0, 
-   "fieldname": "column_break_18", 
-   "fieldtype": "Column Break", 
-   "hidden": 0, 
-   "ignore_user_permissions": 0, 
-   "in_filter": 0, 
-   "in_list_view": 0, 
-   "no_copy": 0, 
-   "permlevel": 0, 
-   "precision": "", 
-   "print_hide": 0, 
-   "read_only": 0, 
-   "report_hide": 0, 
-   "reqd": 0, 
-   "search_index": 0, 
-   "set_only_once": 0
-  }, 
-  {
-   "allow_on_submit": 0, 
    "default": "0.00", 
    "fieldname": "basic_cost", 
    "fieldtype": "Currency", 
@@ -354,6 +336,34 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "allow_on_submit": 0, 
+   "fieldname": "column_break_18", 
+   "fieldtype": "Column Break", 
+   "hidden": 0, 
+   "ignore_user_permissions": 0, 
+   "in_filter": 0, 
+   "in_list_view": 0, 
+   "no_copy": 0, 
+   "permlevel": 0, 
+   "precision": "", 
+   "print_hide": 0, 
+   "read_only": 0, 
+   "report_hide": 0, 
+   "reqd": 0, 
+   "search_index": 0, 
+   "set_only_once": 0
+  }, 
+  {
+   "default": "0.00", 
+   "description": "6.5% of Baic Cost", 
+   "fieldname": "deposit_amount", 
+   "fieldtype": "Currency", 
+   "label": "Deposit Amount", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 1
   }, 
   {
    "allow_on_submit": 0, 
@@ -436,6 +446,15 @@
    "set_only_once": 0
   }, 
   {
+   "default": "0.00", 
+   "fieldname": "net_total", 
+   "fieldtype": "Currency", 
+   "label": "Net Total", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 1
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "other_charges_section", 
    "fieldtype": "Section Break", 
@@ -496,7 +515,7 @@
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
-   "read_only": 0, 
+   "read_only": 1, 
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
@@ -935,22 +954,11 @@
    "set_only_once": 0
   }, 
   {
-   "allow_on_submit": 0, 
-   "fieldname": "section_break_42", 
-   "fieldtype": "Section Break", 
-   "hidden": 0, 
-   "ignore_user_permissions": 0, 
-   "in_filter": 0, 
-   "in_list_view": 0, 
-   "no_copy": 0, 
+   "fieldname": "outstanding_amount", 
+   "fieldtype": "Currency", 
+   "label": "Outstanding Amount", 
    "permlevel": 0, 
-   "precision": "", 
-   "print_hide": 0, 
-   "read_only": 0, 
-   "report_hide": 0, 
-   "reqd": 0, 
-   "search_index": 0, 
-   "set_only_once": 0
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -960,7 +968,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-01 12:52:03.793318", 
+ "modified": "2015-10-06 18:09:44.021811", 
  "modified_by": "Administrator", 
  "module": "sales", 
  "name": "Flat Invoice", 
