@@ -34,10 +34,10 @@ class FlatInvoice(Document):
 		#frappe.msgprint(a)
 		#if self.flag1==0:
 		#if not self.charges_table:
-		frappe.msgprint("From Python charges_method")
-		if self.charges:
+		#frappe.msgprint("From Python charges_method")
+		if not self.charges_table:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
-			frappe.msgprint("From Python charges_method")
+			#frappe.msgprint("From Python charges_method")
 			val=0
 			for value in doc_master.get("other_charges"):
 				if value.charge_type=="Actual":
@@ -85,10 +85,10 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.discounts)
 		doc_req = []
 		val1=0
-		if self.flag2==0:
-			self.flag2=1
+		if not self.discounts_table:
+		#if self.flag2==0:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.discounts)
-			#frappe.msgprint("From Python discounts_method")
+			frappe.msgprint("From Python discounts_method")
 			for value in doc_master.get("other_charges"):
 				#if "discount" or "Discount" in value.description:
 				#frappe.msgprint(value.description)
@@ -101,7 +101,7 @@ class FlatInvoice(Document):
 						"rate": value.rate,
 						"tax_amount":value.rate,
 						}
-					self.append("discounts_table", doc_req)
+					#self.append("discounts_table", doc_req)
 				elif value.charge_type=="On Net Total":
 					val1=val1+(self.total_a * (value.rate/100))
 					doc_req = {
@@ -112,9 +112,10 @@ class FlatInvoice(Document):
 						"tax_amount":self.total_a * (value.rate/100),
 						}	
 					
-					self.append("discounts_table", doc_req)
+				self.append("discounts_table", doc_req)
 			self.discounts_total=val1
 			self.total_b=self.total_a-self.discounts_total			
+			self.flag2=1;
 
 	
 	
@@ -123,8 +124,9 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.charges)
 		doc_req = []
 		val2=0
-		if self.flag3==0:
-			self.flag3=1
+		#if self.flag3==0:
+		#	self.flag3=1
+		if not self.taxes_table:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.taxes)
 			#frappe.msgprint("From Python taxes_method")
 			for value in doc_master.get("other_charges"):

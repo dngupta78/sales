@@ -12,7 +12,7 @@ class FlatPaymentPlan(Document):
 		val2=0
 		if self.payment_schedule:
 			doc_master = frappe.get_doc("Payment Schedule Template", self.payment_schedule)
-			frappe.msgprint("From Python method")
+			#frappe.msgprint("From Python method")
 			for value in doc_master.get("payment_schedule"):
 				if value.charge_type=="Actual":
 					val2=val2+value.rate
