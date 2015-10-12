@@ -13,7 +13,7 @@ frappe.ui.form.on("Flat Invoice","area",function(frm)
 });
 frappe.ui.form.on("Flat Invoice","invoice_flat_no",function(frm)
 {
-  alert(frm.doc.taxes_table);
+  //alert(frm.doc.taxes_table);
   frm.set_value("pref_loc_charges",frm.doc.area * frm.doc.plc_rate);
   frm.set_value("floor_rise_charges",frm.doc.area * frm.doc.frc_rate);
 });
@@ -93,16 +93,17 @@ frappe.ui.form.on("Flat Invoice","rounded_total",function(frm)
  frm.set_value("outstading_amount",frm.doc.rounded_total);
 });
 //----------------------Other Charges Calculation------------
+//var ch=cur_frm.fields_dict
 cur_frm.cscript.charges= function(doc) {
             var me = this;
             //msgprint("from js Charges function")
-            if(doc.charge_table != null) {
+            if(0==0) {
                 return this.frm.call({
                     doc: this.frm.doc,
                     method: "charges_method",
-					//args: {
-				//"charges_table": doc.charges_table,
-			 //},
+					args: {
+				"charges_table": cur_frm.fields_dict.charges_table,
+			 },
                     callback: function(r) {
                         if(!r.exc) {
 							
@@ -188,8 +189,8 @@ cur_frm.cscript.charge_type = function(doc, cdt, cdn) {
 	if(charge.charge_type=="Actual")
 	{
 		//var amount=charge.rate;
-		frappe.model.set_value(cdt, cdn, "total", doc.basic_cost);
 		frappe.model.set_value(cdt, cdn, "tax_amount", 0.00);
+		frappe.model.set_value(cdt, cdn, "total", doc.net_total + doc.other_charges_total + doc.discounts_total + doc.taxes_total);
 		//cur_frm.set_value('other_charges_total', doc.other_charges_total + t);
 		
 	}
@@ -223,11 +224,12 @@ cur_frm.cscript.charge_type = function(doc, cdt, cdn) {
 
 
 
+
 cur_frm.cscript.rate = function(doc, cdt, cdn) {
     var charge = frappe.get_doc(cdt, cdn);
 	var t=0;
 	var ct=doc.charges_table || [];
-	total_charge=0.00;
+	taxes_totalharge=0.00;
 	
 	if(charge.charge_type=="Actual")
 	{
@@ -259,19 +261,37 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 
 
 
-
-frappe.ui.form.on("Sales Taxes and Charges","charges_table_remove",function(doc,cdn,cdt)
-{
-	var t=0.00;
+cur_frm.cscript.charges_table_remove=function(doc, cdt, cdn) {
+    var charge = frappe.get_doc(cdt, cdn);
+	var t=0;
 	var ct=doc.charges_table || [];
-	for(var i=0;i<ct.length;i++)
+	taxes_totalharge=0.00;
+		for(var i=0;i<ct.length;i++)
 		{
 			t=(ct[i].tax_amount) + t;
 			console.log(t);
 		}
+		cur_frm.set_value("other_charges_total", t);
+};
+
+
+
+
+/*frappe.ui.form.on("Sales Taxes and Charges","charges_table_remove",function(doc,cdn,cdt)
+{
+	var t=0.00;
+	//var ch=frappe.get_doc(cdt, cdn);
+	var c=doc.charges_table || [];
+	console.log(c.length);
+	for(var i=0;i<c.length;i++)
+		{
+			//t=(c[i].tax_amount) + t;
+			console.log(c[i].tax_amount);
+		}
     console.log(cdn,cdt);
-	cur_frm.set_value("other_charges_total", t);
-});
+	console.log("Out side of Loop");
+	//cur_frm.set_value("other_charges_total", t);
+});*/
 
 
 
