@@ -27,19 +27,21 @@ class FlatInvoice(Document):
 	
 
 	def charges_method(self):
-		frappe.msgprint(self.charges_table)
+		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.charges)
 		doc_req = []
 		#a = self.doc.get("taxes_table")
 		#frappe.msgprint(a)
-		#if self.flag1==0:
+		if self.flag1==0:
 		#if not self.charges_table:
 		#frappe.msgprint("From Python charges_method")
 		#if not self.charges_table:
-		if self.charges:
+		#if self.charges:
+			frappe.msgprint(self)
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
 			#frappe.msgprint("From Python charges_method")
 			val=0
+			frappe.msgprint(self)
 			for value in doc_master.get("other_charges"):
 				if value.charge_type=="Actual":
 					val=val+value.rate
@@ -52,7 +54,7 @@ class FlatInvoice(Document):
 						}
 			        #frappe.model.clear_table("charges_table");
 				elif value.charge_type=="On Net Total":
-					val=val+(self.basic_cost * (value.rate/100))
+					val=val+(self.net_total * (value.rate/100))
 					doc_req = {
 						"doctype": "Sales Taxes and Charges",
 						"charge_type":value.charge_type,
@@ -66,28 +68,15 @@ class FlatInvoice(Document):
 			self.other_charges_total=val
 			self.total_a=self.total_a+self.other_charges_total
 			self.flag1=1
-			
-			
-	'''def calculate_charges(self):
-		frappe.msgprint("From Python")
-		doc_req = []
-		#doc_master = frappe.get_doc("Sales Taxes and Charges")
-		val=0
-		frappe.doclist.getchildren(name, Sales Taxes and , field='tax_amount')
-		for value in doc_master:
-			val=val+value.tax_amount
-			frappe.msgprint(val)
-			self.other_charges_total=val
-		self.total_a=self.total_a+self.other_charges_total'''
-				
+						
 
 	def discounts_method(self):
 		#frappe.msgprint(self.charges_table)
 		#frappe.msgprint(self.discounts)
 		doc_req = []
 		val1=0
-		if not self.discounts_table:
-		#if self.flag2==0:
+		#if not self.discounts_table:
+		if self.flag2==0:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.discounts)
 			frappe.msgprint("From Python discounts_method")
 			for value in doc_master.get("other_charges"):
@@ -125,9 +114,9 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.charges)
 		doc_req = []
 		val2=0
-		#if self.flag3==0:
-		#	self.flag3=1
-		if not self.taxes_table:
+		if self.flag3==0:
+			self.flag3=1
+		#if not self.taxes_table:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.taxes)
 			#frappe.msgprint("From Python taxes_method")
 			for value in doc_master.get("other_charges"):
@@ -152,47 +141,9 @@ class FlatInvoice(Document):
 						}
 					self.append("taxes_table", doc_req)
 			self.taxes_total=val2
-			self.total_b_c2=self.total_b-self.taxes_total
+			self.total_c=self.total_b+self.taxes_total
 			
-			
-	def charge_type_method(self):
-		doc_req = []
-		#frappe.msgprint("From Python charges_method")
-		#if self.charges_type:
-		if 0==0:
-			doc_master = frappe.get_doc("Sales Taxes and Charges")
-			#frappe.msgprint("From Python charges_method")
-			val=0
-			for value in doc_master.get("taxes_table"):
-				if value.charge_type=="Actual":
-					val=val+value.rate
-					doc_req = {
-						"doctype": "Sales Taxes and Charges",
-						"charge_type":value.charge_type,
-						"description": value.description,
-						"rate": value.rate,
-						"tax_amount":value.rate,
-						"tax_amount":self.basic_cost + value.rate,
-						
-						}
-			        #frappe.model.clear_table("charges_table");
-					self.append("charges_table", doc_req)
-				elif value.charge_type=="On Net Total":
-					val=val+(self.total_a * (value.rate/100))
-					doc_req = {
-						"doctype": "Sales Taxes and Charges",
-						"charge_type":value.charge_type,
-						"description": value.description,
-						"rate": value.rate,
-						"tax_amount":self.total_a * (value.rate/100),
-						}
-					self.other_charges_total=val
-					#frappe.msgprint(self.other_charges_total)
-					self.append("charges_table", doc_req)
-			self.other_charges_total=val
-			self.total_a=self.total_a+self.other_charges_total
-			self.flag1=1
-			
+					
 	
 	
 	
