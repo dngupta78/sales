@@ -5,12 +5,6 @@ cur_frm.add_fetch("invoice_flat_no","area","area")
 cur_frm.add_fetch("invoice_flat_no","plc_rate","plc_rate")
 cur_frm.add_fetch("invoice_flat_no","frc_rate","frc_rate")
 cur_frm.add_fetch("flat_invoice","customer_name","customer_name")
-frappe.ui.form.on("Flat Invoice","customer_name_link",function(frm)
-{
-	console.log("Customer")
-	myFun();
-  
-});
 //----------------------PLC&FRC Calculation----------------------------------
 frappe.ui.form.on("Flat Invoice","area",function(frm)
 {
@@ -69,6 +63,10 @@ frappe.ui.form.on("Flat Invoice","deposit_rate",function(frm)
 });
 //----------------------Net Total Calculation------------
 frappe.ui.form.on("Flat Invoice","basic_cost",function(frm)
+{
+ frm.set_value("net_total",frm.doc.basic_cost + frm.doc.deposit_amount + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges);
+});
+frappe.ui.form.on("Flat Invoice","deposit_rate",function(frm)
 {
  frm.set_value("net_total",frm.doc.basic_cost + frm.doc.deposit_amount + frm.doc.pref_loc_charges + frm.doc.floor_rise_charges);
 });
@@ -220,7 +218,7 @@ cur_frm.cscript.charge_type = function(doc, cdt, cdn) {
 	{
 		frappe.model.set_value(cdt, cdn, "rate", 0.00);
 		frappe.model.set_value(cdt, cdn, "tax_amount", 0.00);
-		frappe.model.set_value(cdt, cdn, "total", doc.net_total + doc.other_charges_total - doc.discounts_total + doc.taxes_total);
+		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
 
 	}
 	else if(charge.charge_type=="On Previous Row Total")
@@ -299,80 +297,107 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 		frappe.model.set_value(cdt, cdn, "total", doc.total_b + doc.taxes_total );
 	}
 	//Row Amount
+		
 	else if(charge.charge_type=="On Previous Row Amount")
 	{
 		var row=charge.row_id - 1;
-		console.log(row);
 		var row_tax=0;
 	    t=0;
 		if(charge.row_id!=null)
 		{
-	
-		for(var i=0;i<ct.length;i++)
-		{
-			if(i==row)
+			for(var i=0;i<ct.length;i++)
+			{}
+			if(charge.row_id<i)
 			{
-				//console.log("If");
-				row_tax=(ct[i].tax_amount) + row_tax;
+				for(var i=0;i<ct.length;i++)
+				{
+					if(i==row)
+					row_tax=(ct[i].tax_amount);
+				}
+				frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
+				for(var i=0;i<ct.length;i++)
+				{
+					t=(ct[i].tax_amount) + t;
+				}
+				cur_frm.set_value("other_charges_total", t );
 			}
-			t=(ct[i].tax_amount) + t;
-			//console.log("Outside If");
-			//console.log(row_tax);
-			
-		}
-		t=t+(row_tax *(charge.rate/100));
-		console.log(t);
-		frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
-		cur_frm.set_value("other_charges_total",t);
-		frappe.model.set_value(cdt, cdn, "total", doc.total_b + doc.other_charges_total );
-		//
-		var row_tax=0;
-	    t=0;
-		for(var i=0;i<dt.length;i++)
-		{
-			if(i==row)
-			{
-				//console.log("If");
-				row_tax=(dt[i].tax_amount) + row_tax;
+			else{
+				msgprint("Row Id Can Not Be Greater Than Previous Row Id");
 			}
-			t=(dt[i].tax_amount) + t;
-			//console.log("Outside If");
-			//console.log(row_tax);
 			
-		}
-		t=t+(row_tax *(charge.rate/100));
-		console.log(t);
-		frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
-		cur_frm.set_value("discounts_total",t);
-		frappe.model.set_value(cdt, cdn, "total", doc.total_b + doc.other_charges_total );
-		//
-		var row_tax=0;
-	    t=0;
-		for(var i=0;i<tt.length;i++)
-		{
-			if(i==row)
-			{
-				//console.log("If");
-				row_tax=(ct[i].tax_amount) + row_tax;
-			}
-			t=(tt[i].tax_amount) + t;
-			//console.log("Outside If");
-			//console.log(row_tax);
-			
-		}
-		t=t+(row_tax *(charge.rate/100));
-		console.log(t);
-		frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
-		cur_frm.set_value("taxes_total",t);
-		frappe.model.set_value(cdt, cdn, "total", doc.total_b + doc.other_charges_total );
-		}
+		}//Row Id If
 		else
 		{
 			msgprint("Please Enter Row ID");
 		}
+		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
+		
+		//Disccount Table
+		var row=charge.row_id - 1;
+		var row_tax=0;
+	    t=0;
+		if(charge.row_id!=null)
+		{
+			for(var i=0;i<dt.length;i++)
+			{}
+			if(charge.row_id<i)
+			{
+				for(var i=0;i<dt.length;i++)
+				{
+					if(i==row)
+					row_tax=(dt[i].tax_amount);
+				}
+				frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
+				for(var i=0;i<dt.length;i++)
+				{
+					t=(dt[i].tax_amount) + t;
+				}
+				cur_frm.set_value("discounts_total", t );
+			}
+			else{
+				msgprint("Row Id Can Not Be Greater Than Previous Row Id");
+			}
+			
+		}//Row Id If
+		else
+		{
+			msgprint("Please Enter Row ID");
+		}
+		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
+		//Taxes Table
+		var row=charge.row_id - 1;
+		var row_tax=0;
+	    t=0;
+		if(charge.row_id!=null)
+		{
+			for(var i=0;i<tt.length;i++)
+			{}
+			if(charge.row_id<i)
+			{
+				for(var i=0;i<tt.length;i++)
+				{
+					if(i==row)
+					row_tax=(tt[i].tax_amount);
+				}
+				frappe.model.set_value(cdt, cdn, "tax_amount", (row_tax *(charge.rate/100)));
+				for(var i=0;i<ct.length;i++)
+				{
+					t=(tt[i].tax_amount) + t;
+				}
+				cur_frm.set_value("taxes_total", t );
+			}
+			else{
+				msgprint("Row Id Can Not Be Greater Than Previous Row Id");
+			}
+			
+		}//Row Id If
+		else
+		{
+			msgprint("Please Enter Row ID");
+		}
+		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
 	}
 	
-    
 	
 };
 
