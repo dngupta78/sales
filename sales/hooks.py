@@ -7,6 +7,21 @@ app_color = "blue"
 app_email = "dngupta78@gmail.com"
 app_version = "0.0.1"
 
+
+
+
+
+doc_events = {
+	"Flat Invoice": {
+		"validate": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
+	}
+}
+
+
+
+
+
+
 # Includes in <head>
 # ------------------
 

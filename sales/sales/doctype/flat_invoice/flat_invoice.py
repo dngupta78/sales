@@ -16,6 +16,7 @@ import frappe.permissions
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 import flat_invoice
+from frappe import throw, _, msgprint
 
 
 class FlatInvoice(Document):
@@ -147,8 +148,8 @@ class FlatInvoice(Document):
 			
 
 @frappe.whitelist(allow_guest=True)			
-def insertData(self):
-	frappe.msgprint("From Python")
+def insertData(self,method):
+	frappe.msgprint("hi")
 	#frappe.msgprint(self.charges)
 		
 			
