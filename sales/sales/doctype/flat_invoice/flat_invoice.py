@@ -143,6 +143,15 @@ class FlatInvoice(Document):
 			self.taxes_total=val2
 			self.total_c=self.total_b+self.taxes_total
 			
+			
+			
+
+@frappe.whitelist(allow_guest=True)			
+def insertData(self):
+	frappe.msgprint("From Python")
+	#frappe.msgprint(self.charges)
+		
+			
 					
 	
 	

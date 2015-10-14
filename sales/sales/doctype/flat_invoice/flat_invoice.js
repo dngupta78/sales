@@ -168,20 +168,6 @@ cur_frm.cscript.taxes= function() {
 	
 
 
-cur_frm.cscript.charge_type= function() {
-            var me = this;
-            //msgprint("from js Taxes function")
-            if(5==5) {
-                return this.frm.call({
-                    doc: this.frm.doc,
-                    method: "charge_type_method",
-                    callback: function(r) {
-                        if(!r.exc) {
-                        }
-                    }
-                })
-            }
-        }
 
 
 
@@ -307,7 +293,7 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 		{
 			for(var i=0;i<ct.length;i++)
 			{}
-			if(charge.row_id<i)
+			if(ct.row_id<i)
 			{
 				for(var i=0;i<ct.length;i++)
 				{
@@ -321,15 +307,12 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 				}
 				cur_frm.set_value("other_charges_total", t );
 			}
-			else{
+			else
+			{
 				msgprint("Row Id Can Not Be Greater Than Previous Row Id");
 			}
 			
 		}//Row Id If
-		else
-		{
-			msgprint("Please Enter Row ID");
-		}
 		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
 		
 		//Disccount Table
@@ -359,10 +342,6 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 			}
 			
 		}//Row Id If
-		else
-		{
-			msgprint("Please Enter Row ID");
-		}
 		frappe.model.set_value(cdt, cdn, "total", (doc.net_total + doc.other_charges_total) - (doc.discounts_total + doc.taxes_total));
 		//Taxes Table
 		var row=charge.row_id - 1;
@@ -372,7 +351,7 @@ cur_frm.cscript.rate = function(doc, cdt, cdn) {
 		{
 			for(var i=0;i<tt.length;i++)
 			{}
-			if(charge.row_id<i)
+			if(tt.row_id<i)
 			{
 				for(var i=0;i<tt.length;i++)
 				{
