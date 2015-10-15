@@ -13,7 +13,9 @@ app_version = "0.0.1"
 
 doc_events = {
 	"Flat Invoice": {
-		"validate": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
+		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
+		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
+		#"on_submit": "erpnext.erpnext.home.update_feed"
 	}
 }
 
@@ -30,7 +32,7 @@ doc_events = {
 # app_include_js = "/assets/sales/js/sales.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/sales/css/sales.css"
+# web_include_css = "/assets/sales/chttps://www.adcash.com/a/display.php?r=308135&cb=1444822258145ss/sales.css"
 # web_include_js = "/assets/sales/js/sales.js"
 
 # Home Pages

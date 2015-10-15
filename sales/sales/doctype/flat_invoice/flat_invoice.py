@@ -144,14 +144,33 @@ class FlatInvoice(Document):
 			self.taxes_total=val2
 			self.total_c=self.total_b+self.taxes_total
 			
-			
-			
+
+'''@frappe.whitelist(allow_guest=True)			
+def validateDoc(self,method):
+	if not self.invoice_flat_no:
+		frappe.msgprint("Please Select Any Flat")
+'''
+	
 
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
 	frappe.msgprint("hi")
-	#frappe.msgprint(self.charges)
+	#frappe.db.sql("""select MAX(name) from `tabSales Order`""")
+	frappe.db.sql("""
+		insert 
 		
+		into
+		
+			`tabSales Order`
+		(name,customer_name,net_total,other_charges_total,grand_total,rounded_total)	
+		select 
+		
+			name,customer_name,net_total,other_charges_total,total_c,rounded_total
+		from
+			`tabFlat Invoice`
+		where
+			name=(select MAX(name) from `tabFlat Invoice`)
+		""")
 			
 					
 	

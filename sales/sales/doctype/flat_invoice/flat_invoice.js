@@ -4,7 +4,7 @@ cur_frm.add_fetch("invoice_flat_no","type","invoice_flat_type")
 cur_frm.add_fetch("invoice_flat_no","area","area")
 cur_frm.add_fetch("invoice_flat_no","plc_rate","plc_rate")
 cur_frm.add_fetch("invoice_flat_no","frc_rate","frc_rate")
-cur_frm.add_fetch("flat_invoice","customer_name","customer_name")
+cur_frm.add_fetch("customer_name_link","customer_name","customer_name")
 //----------------------PLC&FRC Calculation----------------------------------
 frappe.ui.form.on("Flat Invoice","area",function(frm)
 {
