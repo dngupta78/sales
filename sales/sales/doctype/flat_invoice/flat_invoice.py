@@ -15,8 +15,11 @@ from frappe import throw, _, msgprint
 import frappe.permissions
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-import flat_invoice
 from frappe import throw, _, msgprint
+import sys,os
+import MySQLdb
+
+
 
 
 class FlatInvoice(Document):
@@ -25,7 +28,9 @@ class FlatInvoice(Document):
 
 	#def __init__(self,charges_table):
 	#	self.charges_table=charges_table
-	
+	#def __init__(self):
+	#	db=MySQLdb.connect("localhost","root","O18py74ynojdggPJ","1bd3e0294d")
+	#	cursor = db.cursor()
 
 	def charges_method(self):
 		#frappe.msgprint(self.charges_table)
@@ -36,9 +41,9 @@ class FlatInvoice(Document):
 		if self.flag1==0:
 		#if not self.charges_table:
 		#frappe.msgprint("From Python charges_method")
-		#if not self.charges_table:
+		#if self.charges_table is None:
 		#if self.charges:
-			frappe.msgprint(self)
+			#frappe.msgprint(self)
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
 			#frappe.msgprint("From Python charges_method")
 			val=0
@@ -79,7 +84,7 @@ class FlatInvoice(Document):
 		#if not self.discounts_table:
 		if self.flag2==0:
 			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.discounts)
-			frappe.msgprint("From Python discounts_method")
+			#frappe.msgprint("From Python discounts_method")
 			for value in doc_master.get("other_charges"):
 				#if "discount" or "Discount" in value.description:
 				#frappe.msgprint(value.description)
@@ -144,35 +149,55 @@ class FlatInvoice(Document):
 			self.taxes_total=val2
 			self.total_c=self.total_b+self.taxes_total
 			
+			
+			
+			
+	def flatInfo(self):
+		k=0
+		flatInvoiceList=frappe.db.sql('''select  flat_no from `tabFlat Invoice`''')
+		#flatMasterList=frappe.db.sql('''select  flat_no from `tabFlat Master`''')
+		doc_m = frappe.get_doc("Flat Invoice", self.name)
+		for i in flatInvoiceList:
+				if i==doc_m.flat_no:
+						k=1
+						
+		if k==1:
+			frappe.msgprint("Flat Already Sold Out")
+			
+			
+			
+			
+			
+			
+			
 
-'''@frappe.whitelist(allow_guest=True)			
+@frappe.whitelist(allow_guest=True)			
 def validateDoc(self,method):
-	if not self.invoice_flat_no:
+	if self.invoice_flat_no is None:
 		frappe.msgprint("Please Select Any Flat")
-'''
+	if self.customer_name_link is None:
+		frappe.msgprint("Please Select Customer")
+	if self.booking_date is None:
+		frappe.msgprint("Please Enter Booking Date")
+
 	
 
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
-	frappe.msgprint("hi")
-	#frappe.db.sql("""select MAX(name) from `tabSales Order`""")
-	frappe.db.sql("""
-		insert 
-		
-		into
-		
-			`tabSales Order`
-		(name,customer_name,net_total,other_charges_total,grand_total,rounded_total)	
-		select 
-		
-			name,customer_name,net_total,other_charges_total,total_c,rounded_total
-		from
-			`tabFlat Invoice`
-		where
-			name=(select MAX(name) from `tabFlat Invoice`)
-		""")
-			
-					
+	frappe.msgprint("Hi")
+	#doc_m = frappe.get_doc("Flat Invoice", self.name)
+	#frappe.msgprint(doc_m.customer_name)
+	#frappe.db.sql("""insert into `tabSales Invoice Item` (name,item_code,item_name,description,qty,rate,amount)
+	#select flat_no,flat_no,flat_no,invoice_floor,area,basic_rate,basic_cost from `tabFlat Invoice` where flat_no=%s""".format(doc_m.flat_no))
+	#frappe.msgprint(doc_m.flat_no)
+	#frappe.msgprint(doc_m.basic_cost)
+	#db=MySQLdb.connect("localhost","root","O18py74ynojdggPJ","1bd3e0294d")
+	#cursor = db.cursor()
+	#cursor.execute("select name from `tabFlat Invoice` where name='%s'" % self.name)
+	#frappe.msgprint(cursor.fetch(name))
+	#frappe.msgprint(cursor.name)
+	d=frappe.db.sql("""select name from `tabFlat Invoice` where name='%s'""" % self.name)				
+	frappe.msgprint(d.name)
 	
 	
 	

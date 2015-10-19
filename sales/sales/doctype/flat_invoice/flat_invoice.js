@@ -165,6 +165,23 @@ cur_frm.cscript.taxes= function() {
                 })
             }
         }
+		
+		
+		
+cur_frm.cscript.invoice_flat_no= function() {
+            var me = this;
+            //msgprint("from js Taxes function")
+            if(5==5) {
+                return this.frm.call({
+                    doc: this.frm.doc,
+                    method: "flatInfo",
+                    callback: function(r) {
+                        if(!r.exc) {
+                        }
+                    }
+                })
+            }
+        }
 	
 
 

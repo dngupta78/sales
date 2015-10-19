@@ -14,8 +14,10 @@ app_version = "0.0.1"
 doc_events = {
 	"Flat Invoice": {
 		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
+		#"validate" "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
+		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
 		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
-		#"on_submit": "erpnext.erpnext.home.update_feed"
+		
 	}
 }
 
