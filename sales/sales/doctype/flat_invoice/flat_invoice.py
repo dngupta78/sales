@@ -207,7 +207,6 @@ def insertData(self,method):
 	   "discount_amount":"self.discounts_total",
 	   "grand_total":"self.rounded_total",
 	   "contact_email":"self.email_id",
-	   "icon":"icon-shopping-cart",
     }).insert()	
 '''
 @frappe.whitelist(allow_guest=True)			
