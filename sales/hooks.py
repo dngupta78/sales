@@ -16,7 +16,13 @@ doc_events = {
 		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
 		#"validate" "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
 		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
-		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
+		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
+		#"on_update": "sales.sales.doctype.flat_invoice.flat_invoice.updateData"
+		
+	},
+	"Sales Invoice": {
+		#"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData"
+		#"on_update": "sales.sales.doctype.flat_invoice.flat_invoice.updateData"
 		
 	}
 }

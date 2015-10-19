@@ -185,20 +185,36 @@ def validateDoc(self,method):
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
 	frappe.msgprint("Hi")
-	#doc_m = frappe.get_doc("Flat Invoice", self.name)
-	#frappe.msgprint(doc_m.customer_name)
-	#frappe.db.sql("""insert into `tabSales Invoice Item` (name,item_code,item_name,description,qty,rate,amount)
-	#select flat_no,flat_no,flat_no,invoice_floor,area,basic_rate,basic_cost from `tabFlat Invoice` where flat_no=%s""".format(doc_m.flat_no))
-	#frappe.msgprint(doc_m.flat_no)
-	#frappe.msgprint(doc_m.basic_cost)
-	#db=MySQLdb.connect("localhost","root","O18py74ynojdggPJ","1bd3e0294d")
-	#cursor = db.cursor()
-	#cursor.execute("select name from `tabFlat Invoice` where name='%s'" % self.name)
-	#frappe.msgprint(cursor.fetch(name))
-	#frappe.msgprint(cursor.name)
-	d=frappe.db.sql("""select name from `tabFlat Invoice` where name='%s'""" % self.name)				
-	frappe.msgprint(d.name)
-	
+	si =  frappe.get_doc({
+        "doctype": "Sales Invoice",
+        "items": [{
+            "item_name": "self.flat_no",
+			"description": "self.flat_no",
+			"qty": "1",
+			"rate": "self.basic_rate",
+			"amount": "self.basic_cost",
+	   "income_account": "Administrative Expenses - ST",
+       }],
+	   "customer":"self.customer_name",
+	   "customer_name":"self.customer_name",
+	   "contact_mobile":"self.email_id",
+	   "company":"self.customer_name",
+	   "posting_date":"self.booking_date",
+	   "due_date":"self.booking_date",
+	   "net_total":"self.net_total",
+	   "net_total_export":"self.net_total",
+	   "other_charges_total_export":"self.other_charges_total",
+	   "discount_amount":"self.discounts_total",
+	   "grand_total":"self.rounded_total",
+	   "contact_email":"self.email_id",
+	   "icon":"icon-shopping-cart",
+    }).insert()	
+'''
+@frappe.whitelist(allow_guest=True)			
+def updateData(self,method):
+	doc_m = frappe.get_doc("Sales Invoice", self.name)	
+	doc_m.on_update()
+'''	
 	
 	
 	
