@@ -153,17 +153,10 @@ class FlatInvoice(Document):
 			
 			
 	def flatInfo(self):
-		k=0
-		flatInvoiceList=frappe.db.sql('''select  flat_no from `tabFlat Invoice`''')
-		#flatMasterList=frappe.db.sql('''select  flat_no from `tabFlat Master`''')
-		doc_m = frappe.get_doc("Flat Invoice", self.name)
-		for i in flatInvoiceList:
-				if i==doc_m.flat_no:
-						k=1
-						
-		if k==1:
+		flatCheck=frappe.db.sql("""select count(*) from `tabSales Invoice Item` where item_name='%s'"""%(self.flat_no))
+		frappe.msgprint(flatCheck)
+		if  flatCheck>0:
 			frappe.msgprint("Flat Already Sold Out")
-			
 			
 			
 			
@@ -184,36 +177,106 @@ def validateDoc(self,method):
 
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
-	frappe.msgprint("Hi")
-	si =  frappe.get_doc({
+	frappe.msgprint("Start")
+	
+	'''sii =  frappe.get_doc({
+        "doctype": "Sales Invoice Item",
+			"item_name": self.flat_no,
+			#"item_code": self.flat_no,
+			"description": self.flat_no,
+			"qty": self.flag1,
+			"rate": self.basic_rate,
+			"amount": self.basic_cost,
+			"base_rate": self.basic_rate,
+			"base_amount": self.basic_cost,
+			"income_account": "Administrative Expenses - ST",
+			"cost_center":	"Main - ST",	
+    }).insert()
+	'''
+	'''si =  frappe.get_doc({
         "doctype": "Sales Invoice",
-        "items": [{
-            "item_name": "self.flat_no",
-			"description": "self.flat_no",
-			"qty": "1",
-			"rate": "self.basic_rate",
-			"amount": "self.basic_cost",
-	   "income_account": "Administrative Expenses - ST",
-       }],
-	   "customer":"self.customer_name",
-	   "customer_name":"self.customer_name",
-	   "contact_mobile":"self.email_id",
-	   "company":"self.customer_name",
-	   "posting_date":"self.booking_date",
-	   "due_date":"self.booking_date",
-	   "net_total":"self.net_total",
-	   "net_total_export":"self.net_total",
-	   "other_charges_total_export":"self.other_charges_total",
-	   "discount_amount":"self.discounts_total",
-	   "grand_total":"self.rounded_total",
-	   "contact_email":"self.email_id",
-    }).insert()	
-'''
+	   "customer":self.customer_name,
+	   "customer_name":self.customer_name,
+	   "contact_mobile":self.email_id,
+	   "company":self.customer_name,
+	   "posting_date":self.booking_date,
+	   "due_date":self.booking_date,
+	   "net_total":self.net_total,
+	   "net_total_export":self.net_total,
+	   "other_charges_total_export":self.other_charges_total,
+	   "discount_amount":self.discounts_total,
+	   "grand_total":self.rounded_total,
+	   "contact_email":self.email_id,
+    }).insert()'''
+	flatCheck=frappe.db.sql("""select count('%s') from `tabSales Invoice Item`"""%(self.flat_no))
+	if flatCheck >0:
+		frappe.msgprint("Flat Already Sold Out")
+	else:
+		si =  frappe.get_doc({      
+			"doctype": "Sales Invoice",
+				"net_total": self.net_total,
+				"grand_total": self.basic_cost,
+				"debit_to": "Cash - ST",
+				"territory":"India",
+				"grand_total":self.rounded_total,
+				"rounded_total":self.rounded_total,
+				"grand_total_export":self.rounded_total,
+				"outstanding_amount":self.rounded_total,	
+			"entries": [{
+				"item_name": self.flat_no,
+				"item_code": self.flat_no,
+				"description": self.flat_no,
+				"qty": self.flag1,
+				"rate": self.net_total,
+				"amount": self.net_total,
+				"income_account": "Administrative Expenses - ST",
+			}],
+    	}).insert()
+		si.submit()
+		frappe.msgprint(self.net_total)
+		frappe.msgprint("Over")
+	
+	'''soi =  frappe.get_doc({
+        "doctype": "Sales Order Item",
+			"item_name": self.flat_no,
+			"item_code": self.flat_no,
+			"description": self.flat_no,
+			"qty": self.flag1,
+			"rate": self.basic_rate,
+			"amount": self.basic_cost,
+			"income_account": "Administrative Expenses - ST",		
+    }).insert()	'''
+
+@frappe.whitelist(allow_guest=True)
+def submitDoc(self,method):
+	if flatCheck >0:
+		frappe.msgprint("Flat Already Sold Out")
+	else:
+		si.submit()
+
 @frappe.whitelist(allow_guest=True)			
 def updateData(self,method):
+	frappe.db.sql("""
+		insert 
+		
+		into
+		
+			`tabSales Invoice`
+		(naming_series,customer,customer_name,contact_mobile,contact_email,company,posting_date,due_date,net_total,net_total_export,other_charges_total_export,
+		other_charges_total,discount_amount,grand_total,
+		rounded_total,outstanding_amount,grand_total_export,rounded_total_export)	
+		select 
+		
+			naming_series,customer_name,customer_name,contact_number,email_id,customer_name,booking_date,booking_date,net_total,net_total	
+			,other_charges_total,other_charges_total,discounts_total,rounded_total,rounded_total,rounded_total,rounded_total,rounded_total	
+		from
+			`tabFlat Invoice`
+		where
+			name='%s'
+		"""% (self.name))
 	doc_m = frappe.get_doc("Sales Invoice", self.name)	
-	doc_m.on_update()
-'''	
+	doc_m.on_submit()	
+
 	
 	
 	
