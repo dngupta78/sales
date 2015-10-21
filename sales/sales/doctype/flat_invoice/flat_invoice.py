@@ -21,7 +21,6 @@ import MySQLdb
 
 
 
-
 class FlatInvoice(Document):
 
 	#charges_table=[]
@@ -32,33 +31,24 @@ class FlatInvoice(Document):
 	#	db=MySQLdb.connect("localhost","root","O18py74ynojdggPJ","1bd3e0294d")
 	#	cursor = db.cursor()
 
-	def charges_method(self):
-		#frappe.msgprint(self.charges_table)
-		#frappe.msgprint(self.charges)
+	def charges_method(self):	
 		doc_req = []
-		#a = self.doc.get("taxes_table")
-		#frappe.msgprint(a)
-		if self.flag1==0:
-		#if not self.charges_table:
-		#frappe.msgprint("From Python charges_method")
-		#if self.charges_table is None:
-		#if self.charges:
-			#frappe.msgprint(self)
-			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.charges)
-			#frappe.msgprint("From Python charges_method")
+		#<<<<<<< HEAD
+#=======
+#>>>>>>> d1c12b8ead7aa6bf31699eff964584c774e6ae17
+		if self.charges and not len(self.get("charges_table")):
+			doc_master = frappe.get_doc("Sales Taxes and Charges Template", self.charges)
 			val=0
 			frappe.msgprint(self)
-			for value in doc_master.get("other_charges"):
+			for value in doc_master.get("taxes"):
 				if value.charge_type=="Actual":
-					val=val+value.rate
+					val=val+value.tax_amount
 					doc_req = {
 						"doctype": "Sales Taxes and Charges",
 						"charge_type":value.charge_type,
 						"description": value.description,
-						"rate": value.rate,
-						"tax_amount":value.rate,
+						"tax_amount":value.tax_amount,
 						}
-			        #frappe.model.clear_table("charges_table");
 				elif value.charge_type=="On Net Total":
 					val=val+(self.net_total * (value.rate/100))
 					doc_req = {
@@ -69,11 +59,10 @@ class FlatInvoice(Document):
 						"tax_amount":self.total_a * (value.rate/100),
 						}
 					self.other_charges_total=val
-					#frappe.msgprint(self.other_charges_total)
 				self.append("charges_table", doc_req)
 			self.other_charges_total=val
 			self.total_a=self.total_a+self.other_charges_total
-			self.flag1=1
+			#self.flag1=1
 						
 
 	def discounts_method(self):
@@ -82,22 +71,20 @@ class FlatInvoice(Document):
 		doc_req = []
 		val1=0
 		#if not self.discounts_table:
-		if self.flag2==0:
-			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.discounts)
+		if self.discounts and not len(self.get("discounts_table")):
+			doc_master = frappe.get_doc("Sales Taxes and Charges Template", self.discounts)
 			#frappe.msgprint("From Python discounts_method")
-			for value in doc_master.get("other_charges"):
+			for value in doc_master.get("taxes"):
 				#if "discount" or "Discount" in value.description:
 				#frappe.msgprint(value.description)
 				if value.charge_type=="Actual":
-					val1=val1+value.rate
+					val1=val1+value.tax_amount
 					doc_req = {
 						"doctype": "Sales Taxes and Charges",
 						"charge_type":value.charge_type,
 						"description": value.description,
-						"rate": value.rate,
-						"tax_amount":value.rate,
+						"tax_amount":value.tax_amount,
 						}
-					#self.append("discounts_table", doc_req)
 				elif value.charge_type=="On Net Total":
 					val1=val1+(self.total_a * (value.rate/100))
 					doc_req = {
@@ -120,20 +107,17 @@ class FlatInvoice(Document):
 		#frappe.msgprint(self.charges)
 		doc_req = []
 		val2=0
-		if self.flag3==0:
-			self.flag3=1
-		#if not self.taxes_table:
-			doc_master = frappe.get_doc("Sales Taxes and Charges Master", self.taxes)
+		if self.taxes and not len(self.get("taxes_table")):
+			doc_master = frappe.get_doc("Sales Taxes and Charges Template", self.taxes)
 			#frappe.msgprint("From Python taxes_method")
-			for value in doc_master.get("other_charges"):
+			for value in doc_master.get("taxes"):
 				if value.charge_type=="Actual":
-					val2=val2+value.rate
+					val2=val2+value.tax_amount
 					doc_req = {
 						"doctype": "Sales Taxes and Charges",
 						"charge_type":value.charge_type,
 						"description": value.description,
-						"rate": value.rate,
-						"tax_amount":value.rate,
+						"tax_amount":value.tax_amount,
 						}
 					self.append("taxes_table", doc_req)
 				elif value.charge_type=="On Net Total":
@@ -153,9 +137,9 @@ class FlatInvoice(Document):
 			
 			
 	def flatInfo(self):
-		flatCheck=frappe.db.sql("""select count(*) from `tabSales Invoice Item` where item_name='%s'"""%(self.flat_no))
-		frappe.msgprint(flatCheck)
-		if  flatCheck>0:
+		#flatCheck=frappe.db.sql("""select isBooked from `tabFlat Master` where flat_no='%s'"""%(self.flat_no))
+		flatMaster=frappe.get_doc("Flat Master",self.flat_no)
+		if flatMaster.isbooked==1:
 			frappe.msgprint("Flat Already Sold Out")
 			
 			
@@ -166,50 +150,32 @@ class FlatInvoice(Document):
 
 @frappe.whitelist(allow_guest=True)			
 def validateDoc(self,method):
+	flag1=0
 	if self.invoice_flat_no is None:
-		frappe.msgprint("Please Select Any Flat")
+		frappe.msgprint("Select Flat")
+		flag1=1
+	if self.invoice_flat_no:
+		flatMaster=frappe.get_doc("Flat Master",self.flat_no)
+		if flatMaster.isbooked==1:
+			frappe.msgprint("Flat Already Sold Out")
+			flag1=1
 	if self.customer_name_link is None:
-		frappe.msgprint("Please Select Customer")
+		frappe.msgprint("Select Customer")
+		flag1=1
 	if self.booking_date is None:
-		frappe.msgprint("Please Enter Booking Date")
+		frappe.msgprint("Enter Booking Date")
+		flag1=1
+
+	return flag1
+	
 
 	
 
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
 	frappe.msgprint("Start")
-	
-	'''sii =  frappe.get_doc({
-        "doctype": "Sales Invoice Item",
-			"item_name": self.flat_no,
-			#"item_code": self.flat_no,
-			"description": self.flat_no,
-			"qty": self.flag1,
-			"rate": self.basic_rate,
-			"amount": self.basic_cost,
-			"base_rate": self.basic_rate,
-			"base_amount": self.basic_cost,
-			"income_account": "Administrative Expenses - ST",
-			"cost_center":	"Main - ST",	
-    }).insert()
-	'''
-	'''si =  frappe.get_doc({
-        "doctype": "Sales Invoice",
-	   "customer":self.customer_name,
-	   "customer_name":self.customer_name,
-	   "contact_mobile":self.email_id,
-	   "company":self.customer_name,
-	   "posting_date":self.booking_date,
-	   "due_date":self.booking_date,
-	   "net_total":self.net_total,
-	   "net_total_export":self.net_total,
-	   "other_charges_total_export":self.other_charges_total,
-	   "discount_amount":self.discounts_total,
-	   "grand_total":self.rounded_total,
-	   "contact_email":self.email_id,
-    }).insert()'''
-	flatCheck=frappe.db.sql("""select count('%s') from `tabSales Invoice Item`"""%(self.flat_no))
-	if flatCheck >0:
+	#flatMaster=frappe.get_doc("Flat Master",self.flat_no)
+	if flatMaster.isbooked==1:
 		frappe.msgprint("Flat Already Sold Out")
 	else:
 		si =  frappe.get_doc({      
@@ -222,7 +188,7 @@ def insertData(self,method):
 				"rounded_total":self.rounded_total,
 				"grand_total_export":self.rounded_total,
 				"outstanding_amount":self.rounded_total,	
-			"entries": [{
+			"items": [{
 				"item_name": self.flat_no,
 				"item_code": self.flat_no,
 				"description": self.flat_no,
@@ -233,50 +199,22 @@ def insertData(self,method):
 			}],
     	}).insert()
 		si.submit()
-		frappe.msgprint(self.net_total)
 		frappe.msgprint("Over")
-	
-	'''soi =  frappe.get_doc({
-        "doctype": "Sales Order Item",
-			"item_name": self.flat_no,
-			"item_code": self.flat_no,
-			"description": self.flat_no,
-			"qty": self.flag1,
-			"rate": self.basic_rate,
-			"amount": self.basic_cost,
-			"income_account": "Administrative Expenses - ST",		
-    }).insert()	'''
 
 @frappe.whitelist(allow_guest=True)
 def submitDoc(self,method):
-	if flatCheck >0:
-		frappe.msgprint("Flat Already Sold Out")
-	else:
-		si.submit()
+	frappe.msgprint("submit")
+
 
 @frappe.whitelist(allow_guest=True)			
-def updateData(self,method):
-	frappe.db.sql("""
-		insert 
-		
-		into
-		
-			`tabSales Invoice`
-		(naming_series,customer,customer_name,contact_mobile,contact_email,company,posting_date,due_date,net_total,net_total_export,other_charges_total_export,
-		other_charges_total,discount_amount,grand_total,
-		rounded_total,outstanding_amount,grand_total_export,rounded_total_export)	
-		select 
-		
-			naming_series,customer_name,customer_name,contact_number,email_id,customer_name,booking_date,booking_date,net_total,net_total	
-			,other_charges_total,other_charges_total,discounts_total,rounded_total,rounded_total,rounded_total,rounded_total,rounded_total	
-		from
-			`tabFlat Invoice`
-		where
-			name='%s'
-		"""% (self.name))
-	doc_m = frappe.get_doc("Sales Invoice", self.name)	
-	doc_m.on_submit()	
-
-	
-	
-	
+def beforeInsertDoc(self,method):
+	frappe.msgprint("Start Validate")
+	'''if self.invoice_flat_no is None:
+		frappe.msgprint("Select Any Flat")
+	if self.customer_name_link is None:
+		frappe.msgprint("Select Customer")
+	if self.booking_date is None:
+		frappe.msgprint("Enter Booking Date")'''
+	if validateDoc(self,method)==0:
+		insertData(self,method)
+	frappe.msgprint("End Validate")
