@@ -110,7 +110,7 @@ frappe.ui.form.on("Flat Invoice","taxes_total",function(frm)
 //----------------------Outstanding Amount------------
 frappe.ui.form.on("Flat Invoice","rounded_total",function(frm)
 {
- frm.set_value("outstading_amount",frm.doc.rounded_total);
+ frm.set_value("outstanding_amount",frm.doc.rounded_total);
 });
 //----------------------Other Charges Calculation------------
 //var ch=cur_frm.fields_dict
@@ -436,6 +436,28 @@ cur_frm.cscript.taxes_table_remove=function(doc, cdt, cdn) {
 };
 
 
+/*cur_frm.save=function(doc, cdt, cdn) { 
+
+			/*if(5==5) {
+                return this.frm.call({
+                    doc: this.frm.doc,
+                    method: "flatInfo",
+                    callback: function(r) {
+                        if(!r.exc) {
+                        }
+                    }
+                })
+            }
+        }
+//frappe.msgprint("From Save")
+//cur_frm.get_field("Submit")
+
+};
+*/
+frappe.ui.form.on("Flat Invoice","save",function(frm)
+{
+	frappe.msgprint("Yes")
+});
 
 
 
