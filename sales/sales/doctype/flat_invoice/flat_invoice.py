@@ -174,7 +174,7 @@ def validateDoc(self,method):
 @frappe.whitelist(allow_guest=True)			
 def insertData(self,method):
 	frappe.msgprint("Start")
-	#flatMaster=frappe.get_doc("Flat Master",self.flat_no)
+	flatMaster=frappe.get_doc("Flat Master",self.flat_no)
 	if flatMaster.isbooked==1:
 		frappe.msgprint("Flat Already Sold Out")
 	else:
@@ -218,3 +218,8 @@ def beforeInsertDoc(self,method):
 	if validateDoc(self,method)==0:
 		insertData(self,method)
 	frappe.msgprint("End Validate")
+
+	
+	
+	
+	
