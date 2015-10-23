@@ -13,17 +13,8 @@ app_version = "0.0.1"
 
 doc_events = {
 	"Flat Invoice": {
-		#"before_save": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
 		"validate":"sales.sales.doctype.flat_invoice.flat_invoice.beforeInsertDoc",
-		#"validate":	"sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",	
-		#"validate":	"sales.sales.doctype.flat_invoice.flat_invoice.insertData",	
-		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.submitDoc",
-		#"before_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
-		#"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.updateData",
-		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
-		#"validate" "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
-		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
-		#"on_update": "sales.sales.doctype.flat_invoice.flat_invoice.updateData"
+		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.submitDoc"
 		
 	},
 	"Item": {
