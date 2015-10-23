@@ -17,7 +17,7 @@ doc_events = {
 		"validate":"sales.sales.doctype.flat_invoice.flat_invoice.beforeInsertDoc",
 		#"validate":	"sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",	
 		#"validate":	"sales.sales.doctype.flat_invoice.flat_invoice.insertData",	
-		#"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.submitDoc",
+		"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.submitDoc",
 		#"before_submit": "sales.sales.doctype.flat_invoice.flat_invoice.insertData",
 		#"on_submit": "sales.sales.doctype.flat_invoice.flat_invoice.updateData",
 		#"validate": "sales.sales.doctype.flat_invoice.flat_invoice.validateDoc",
